@@ -1,12 +1,14 @@
 import React from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+
 import ThoughtList from "../components/ThoughtList";
 import FriendList from "../components/FriendList";
+
+import { useQuery } from "@apollo/client";
 import { QUERY_USER, QUERY_ME } from "../utils/queries";
 import Auth from "../utils/auth";
 
-const Profile = () => {
+const Profile = (props) => {
   const { username: userParam } = useParams();
 
   const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
@@ -15,7 +17,7 @@ const Profile = () => {
 
   const user = data?.me || data?.user || {};
 
-  // navigate to personal profile page if username is the logged-in user's
+  // navigate to personal profile page if username is yours
   if (Auth.loggedIn() && Auth.getProfile().data.username === userParam) {
     return <Navigate to="/profile" />;
   }
@@ -27,7 +29,7 @@ const Profile = () => {
   if (!user?.username) {
     return (
       <h4>
-        You need to be logged in to see this page. Use the navigation links to
+        You need to be logged in to see this. Use the navigation links above to
         sign up or log in!
       </h4>
     );
@@ -48,6 +50,7 @@ const Profile = () => {
             title={`${user.username}'s thoughts...`}
           />
         </div>
+
         <div className="col-12 col-lg-3 mb-3">
           <FriendList
             username={user.username}
