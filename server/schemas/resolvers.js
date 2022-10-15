@@ -41,6 +41,7 @@ const resolvers = {
         .populate("thoughts");
     },
   },
+
   Mutation: {
     addUser: async (parents, args) => {
       const user = await User.create(args);
